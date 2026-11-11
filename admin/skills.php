@@ -19,12 +19,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     if ($skill_name && $category && $proficiency >= 0 && $proficiency <= 100) {
         if ($id > 0) {
             $stmt = $conn->prepare("UPDATE skills SET skill_name=?, category=?, proficiency=? WHERE id=?");
-            $stmt->bind_param("ssii", $skill_name, $category, $proficiency, $id);
+            $stmt->execute([$skill_name, $category, $proficiency, $id]);
         } else {
             $stmt = $conn->prepare("INSERT INTO skills (skill_name, category, proficiency) VALUES (?, ?, ?)");
-            $stmt->bind_param("ssi", $skill_name, $category, $proficiency);
+            $stmt->execute([$skill_name, $category, $proficiency]);
         }
-        if ($stmt->execute()) {
+        if ($stmt->rowCount() > 0) {
             $success = 'Skill saved successfully!';
         } else {
             $error = 'Error saving skill';
@@ -37,8 +37,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 if (isset($_GET['delete'])) {
     $id = intval($_GET['delete']);
     $stmt = $conn->prepare("DELETE FROM skills WHERE id = ?");
-    $stmt->bind_param("i", $id);
-    $stmt->execute();
+    $stmt->execute([$id]);
     header('Location: skills.php');
     exit;
 }
@@ -47,9 +46,8 @@ $edit_skill = null;
 if (isset($_GET['edit'])) {
     $id = intval($_GET['edit']);
     $stmt = $conn->prepare("SELECT * FROM skills WHERE id = ?");
-    $stmt->bind_param("i", $id);
-    $stmt->execute();
-    $edit_skill = $stmt->get_result()->fetch_assoc();
+    $stmt->execute([$id]);
+    $edit_skill = $stmt->fetch();
 }
 
 $skills = $conn->query("SELECT * FROM skills ORDER BY category, proficiency DESC");
@@ -122,7 +120,7 @@ $skills = $conn->query("SELECT * FROM skills ORDER BY category, proficiency DESC
                             </tr>
                         </thead>
                         <tbody>
-                            <?php while ($skill = $skills->fetch_assoc()): ?>
+                            <?php while ($skill = $skills->fetch()): ?>
                             <tr>
                                 <td><?php echo htmlspecialchars($skill['skill_name']); ?></td>
                                 <td><?php echo htmlspecialchars($skill['category']); ?></td>

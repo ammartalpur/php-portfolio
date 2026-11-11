@@ -10,19 +10,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
     if ($username && $password) {
         $stmt = $conn->prepare("SELECT id, password_hash FROM admin_users WHERE username = ?");
-        $stmt->bind_param("s", $username);
-        $stmt->execute();
-        $result = $stmt->get_result();
+        $stmt->execute([$username]);
+        $row = $stmt->fetch();
 
-        if ($row = $result->fetch_assoc()) {
-            if (password_verify($password, $row['password_hash'])) {
-                $_SESSION['admin_logged_in'] = true;
-                $_SESSION['admin_id'] = $row['id'];
-                header('Location: dashboard.php');
-                exit;
-            } else {
-                $error = 'Invalid credentials';
-            }
+        if ($row && password_verify($password, $row['password_hash'])) {
+            $_SESSION['admin_logged_in'] = true;
+            $_SESSION['admin_id'] = $row['id'];
+            header('Location: dashboard.php');
+            exit;
         } else {
             $error = 'Invalid credentials';
         }

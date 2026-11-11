@@ -23,9 +23,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     } else {
         // Use prepared statement to prevent SQL injection
         $stmt = $conn->prepare("INSERT INTO contact_messages (name, email, subject, message) VALUES (?, ?, ?, ?)");
-        $stmt->bind_param("ssss", $name, $email, $subject, $message);
-
-        if ($stmt->execute()) {
+        if ($stmt->execute([$name, $email, $subject, $message])) {
             $success = 'Thank you for your message! I will get back to you soon.';
             // Clear form
             $name = $email = $subject = $message = '';

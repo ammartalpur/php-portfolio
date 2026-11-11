@@ -10,8 +10,7 @@ if (!isset($_SESSION['admin_logged_in'])) {
 if (isset($_GET['delete'])) {
     $id = intval($_GET['delete']);
     $stmt = $conn->prepare("DELETE FROM contact_messages WHERE id = ?");
-    $stmt->bind_param("i", $id);
-    $stmt->execute();
+    $stmt->execute([$id]);
     header('Location: messages.php');
     exit;
 }

@@ -14,25 +14,22 @@ if (isset($_GET['delete'])) {
 
     if ($table === 'projects' && $id > 0) {
         $stmt = $conn->prepare("DELETE FROM projects WHERE id = ?");
-        $stmt->bind_param("i", $id);
-        $stmt->execute();
+        $stmt->execute([$id]);
     } elseif ($table === 'skills' && $id > 0) {
         $stmt = $conn->prepare("DELETE FROM skills WHERE id = ?");
-        $stmt->bind_param("i", $id);
-        $stmt->execute();
+        $stmt->execute([$id]);
     } elseif ($table === 'messages' && $id > 0) {
         $stmt = $conn->prepare("DELETE FROM contact_messages WHERE id = ?");
-        $stmt->bind_param("i", $id);
-        $stmt->execute();
+        $stmt->execute([$id]);
     }
     header('Location: dashboard.php');
     exit;
 }
 
 // Get counts
-$projects_count = $conn->query("SELECT COUNT(*) as c FROM projects")->fetch_assoc()['c'];
-$skills_count = $conn->query("SELECT COUNT(*) as c FROM skills")->fetch_assoc()['c'];
-$messages_count = $conn->query("SELECT COUNT(*) as c FROM contact_messages")->fetch_assoc()['c'];
+$projects_count = $conn->query("SELECT COUNT(*) as c FROM projects")->fetch()['c'];
+$skills_count = $conn->query("SELECT COUNT(*) as c FROM skills")->fetch()['c'];
+$messages_count = $conn->query("SELECT COUNT(*) as c FROM contact_messages")->fetch()['c'];
 
 // Recent messages
 $messages = $conn->query("SELECT * FROM contact_messages ORDER BY submitted_at DESC LIMIT 5");
@@ -103,7 +100,7 @@ $messages = $conn->query("SELECT * FROM contact_messages ORDER BY submitted_at D
                                 </tr>
                             </thead>
                             <tbody>
-                                <?php while ($msg = $messages->fetch_assoc()): ?>
+                                <?php while ($msg = $messages->fetch()): ?>
                                 <tr>
                                     <td><?php echo htmlspecialchars($msg['name']); ?></td>
                                     <td><?php echo htmlspecialchars($msg['email']); ?></td>

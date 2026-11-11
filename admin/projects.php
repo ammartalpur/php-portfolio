@@ -22,12 +22,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     if ($title && $description && $tags) {
         if ($id > 0) {
             $stmt = $conn->prepare("UPDATE projects SET title=?, description=?, tags=?, demo_url=?, github_url=? WHERE id=?");
-            $stmt->bind_param("sssssi", $title, $description, $tags, $demo_url, $github_url, $id);
+            $stmt->execute([$title, $description, $tags, $demo_url, $github_url, $id]);
         } else {
             $stmt = $conn->prepare("INSERT INTO projects (title, description, tags, demo_url, github_url) VALUES (?, ?, ?, ?, ?)");
-            $stmt->bind_param("sssss", $title, $description, $tags, $demo_url, $github_url);
+            $stmt->execute([$title, $description, $tags, $demo_url, $github_url]);
         }
-        if ($stmt->execute()) {
+        if ($stmt->rowCount() > 0) {
             $success = $id > 0 ? 'Project updated successfully!' : 'Project added successfully!';
         } else {
             $error = 'Error saving project';
@@ -41,8 +41,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 if (isset($_GET['delete'])) {
     $id = intval($_GET['delete']);
     $stmt = $conn->prepare("DELETE FROM projects WHERE id = ?");
-    $stmt->bind_param("i", $id);
-    $stmt->execute();
+    $stmt->execute([$id]);
     header('Location: projects.php');
     exit;
 }
@@ -52,9 +51,8 @@ $edit_project = null;
 if (isset($_GET['edit'])) {
     $id = intval($_GET['edit']);
     $stmt = $conn->prepare("SELECT * FROM projects WHERE id = ?");
-    $stmt->bind_param("i", $id);
-    $stmt->execute();
-    $edit_project = $stmt->get_result()->fetch_assoc();
+    $stmt->execute([$id]);
+    $edit_project = $stmt->fetch();
 }
 
 // Get all projects
@@ -135,7 +133,7 @@ $projects = $conn->query("SELECT * FROM projects ORDER BY created_at DESC");
                             </tr>
                         </thead>
                         <tbody>
-                            <?php while ($proj = $projects->fetch_assoc()): ?>
+                            <?php while ($proj = $projects->fetch()): ?>
                             <tr>
                                 <td><?php echo htmlspecialchars($proj['title']); ?></td>
                                 <td><small><?php echo htmlspecialchars($proj['tags']); ?></small></td>

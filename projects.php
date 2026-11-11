@@ -31,8 +31,8 @@ $result = $conn->query($sql);
 
         <div class="row g-4" id="projectsContainer">
             <?php
-            if ($result->num_rows > 0) {
-                while($row = $result->fetch_assoc()) {
+            if ($result->rowCount() > 0) {
+                while($row = $result->fetch()) {
                     // Explode tags string into an array for styling
                     $tags = explode(',', $row['tags']);
             ?>

@@ -8,8 +8,8 @@ $sql = "SELECT * FROM skills ORDER BY category, proficiency DESC";
 $result = $conn->query($sql);
 
 $skillsByCategory = [];
-if ($result->num_rows > 0) {
-    while($row = $result->fetch_assoc()) {
+if ($result->rowCount() > 0) {
+    while($row = $result->fetch()) {
         $skillsByCategory[$row['category']][] = $row;
     }
 }

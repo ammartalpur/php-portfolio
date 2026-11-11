@@ -1,9 +1,9 @@
-CREATE DATABASE IF NOT EXISTS portfolio_db;
-USE portfolio_db;
+-- Supabase PostgreSQL Schema
+-- Run this in your Supabase SQL Editor
 
 -- 1. Table for Portfolio Projects
 CREATE TABLE IF NOT EXISTS projects (
-    id INT AUTO_INCREMENT PRIMARY KEY,
+    id SERIAL PRIMARY KEY,
     title VARCHAR(150) NOT NULL,
     description TEXT NOT NULL,
     image_url VARCHAR(255) DEFAULT 'assets/img/default-project.jpg',
@@ -15,22 +15,22 @@ CREATE TABLE IF NOT EXISTS projects (
 
 -- 2. Table for Skills & Education
 CREATE TABLE IF NOT EXISTS skills (
-    id INT AUTO_INCREMENT PRIMARY KEY,
+    id SERIAL PRIMARY KEY,
     skill_name VARCHAR(100) NOT NULL,
-    category VARCHAR(50) NOT NULL, -- e.g., Frontend, Backend, Database, Leadership
-    proficiency INT DEFAULT 85 -- Percentage value 0-100
+    category VARCHAR(50) NOT NULL,
+    proficiency INT DEFAULT 85
 );
 
 -- 3. Table for Admin Credentials (CRUD access)
 CREATE TABLE IF NOT EXISTS admin_users (
-    id INT AUTO_INCREMENT PRIMARY KEY,
+    id SERIAL PRIMARY KEY,
     username VARCHAR(50) UNIQUE NOT NULL,
     password_hash VARCHAR(255) NOT NULL
 );
 
 -- 4. Table for Contact Form Messages
 CREATE TABLE IF NOT EXISTS contact_messages (
-    id INT AUTO_INCREMENT PRIMARY KEY,
+    id SERIAL PRIMARY KEY,
     name VARCHAR(100) NOT NULL,
     email VARCHAR(100) NOT NULL,
     subject VARCHAR(150) NOT NULL,

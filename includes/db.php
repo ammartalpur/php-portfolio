@@ -1,19 +1,38 @@
 <?php
-// VERCEL DEPLOYMENT WARNING:
-// 'localhost' will NOT work on Vercel. You must use a REMOTE MySQL database provider 
-// (e.g., Aiven, Clever Cloud, FreeMySQLHosting, or InfinityFree).
+// includes/db.php - PostgreSQL via Supabase
+// Update these values with your Supabase project credentials
 
-$servername = "your-remote-host.com";
-$username = "your-remote-username";
-$password = "your-remote-password";
-$dbname = "your-remote-dbname";
-$port = 3306; // Ensure the port matches your remote database provider
+$host = "lvpxlkyyawcirxlngvax.supabase.co";     // Your Supabase project host
+$username = "postgres";                          // Default Supabase username
+$password = "your-supabase-password-here";            // Your Supabase database password
+$dbname = "postgres";                            // Default Supabase database name
 
-// Create connection
-$conn = new mysqli($servername, $username, $password, $dbname, $port);
+// Debug mode - set to false in production
+define('DEBUG_MODE', true);
 
-// Check connection
-if ($conn->connect_error) {
-    die("Connection failed: " . $conn->connect_error);
+try {
+    $conn = new PDO(
+        "pgsql:host=$host;dbname=$dbname;port=5432",
+        $username,
+        $password,
+        [
+            PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION,
+            PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC,
+        ]
+    );
+
+    // Debug: Log and output successful connection
+    if (DEBUG_MODE) {
+        $conn_info = "Database connection established successfully to Supabase PostgreSQL";
+        error_log($conn_info);
+        // Output for development visibility
+        echo "<!-- Database connected to Supabase PostgreSQL -->";
+    }
+
+} catch (PDOException $e) {
+    // Debug: Log the error details
+    if (DEBUG_MODE) {
+        error_log("Database connection failed: " . $e->getMessage());
+    }
+    die("Connection failed: " . $e->getMessage());
 }
-?>
