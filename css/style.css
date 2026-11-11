@@ -1,0 +1,60 @@
+/* css/style.css */
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+
+body {
+    font-family: 'Inter', system-ui, sans-serif;
+    transition: background-color 0.3s, color 0.3s;
+}
+
+.hero-section {
+    background: linear-gradient(135deg, var(--bs-tertiary-bg) 0%, var(--bs-body-bg) 100%);
+}
+
+.hero-title span {
+    font-style: italic;
+    color: var(--bs-primary);
+}
+
+.glass-card {
+    background: var(--bs-body-bg);
+    border: 1px solid var(--bs-border-color);
+    border-radius: 15px;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+}
+
+.glass-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+}
+
+.project-card {
+    overflow: hidden;
+    border-radius: 15px;
+}
+
+.project-card img {
+    transition: transform 0.5s ease;
+    height: 200px;
+    object-fit: cover;
+}
+
+.project-card:hover img {
+    transform: scale(1.05);
+}
+
+.project-tags span {
+    display: inline-block;
+    padding: 0.25em 0.75em;
+    margin: 0.2em;
+    border-radius: 50px;
+    background: var(--bs-secondary-bg);
+    border: 1px solid var(--bs-border-color);
+    font-size: 0.8em;
+    transition: all 0.3s;
+}
+
+.project-tags span:hover {
+    border-color: var(--bs-primary);
+    color: var(--bs-primary);
+}
