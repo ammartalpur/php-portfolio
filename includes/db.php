@@ -1,14 +1,17 @@
-<?php
-// includes/db.php - PostgreSQL via Supabase
-// Update these values with your Supabase project credentials
+// includes/db.php - PostgreSQL via Supabase for Vercel Serverless Functions
+// Database connection for Vercel deployment
+// Secrets should be configured in Vercel dashboard as environment variables:
+// - SUPABASE_PROJECT_REF
+// - SUPABASE_SERVICE_ROLE_KEY
+// - SUPABASE_DB_PASSWORD (optional)
 
-$host = "lvpxlkyyawcirxlngvax.supabase.co";     // Your Supabase project host
-$username = "postgres";                          // Default Supabase username
-$password = "your-supabase-password-here";            // Your Supabase database password
-$dbname = "postgres";                            // Default Supabase database name
+$projectRef = getenv('SUPABASE_PROJECT_REF') ?: 'lvpxlkyyawcirxlngvax';
+$serviceRoleKey = getenv('SUPABASE_SERVICE_ROLE_KEY') ?: 'your-supabase-password-here';
 
-// Debug mode - set to false in production
-define('DEBUG_MODE', true);
+$host = "$projectRef.supabase.co";
+$username = "postgres";
+$password = $serviceRoleKey;
+$dbname = "postgres";
 
 try {
     $conn = new PDO(
@@ -20,19 +23,8 @@ try {
             PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC,
         ]
     );
-
-    // Debug: Log and output successful connection
-    if (DEBUG_MODE) {
-        $conn_info = "Database connection established successfully to Supabase PostgreSQL";
-        error_log($conn_info);
-        // Output for development visibility
-        echo "<!-- Database connected to Supabase PostgreSQL -->";
-    }
-
 } catch (PDOException $e) {
-    // Debug: Log the error details
-    if (DEBUG_MODE) {
-        error_log("Database connection failed: " . $e->getMessage());
-    }
-    die("Connection failed: " . $e->getMessage());
-}
+    error_log("Database connection failed: " . $e->getMessage());
+    // In production, you might want to return a meaningful error
+    // instead of dying
+    die("Database connection failed");
