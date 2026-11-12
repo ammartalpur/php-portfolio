@@ -1,16 +1,22 @@
+<?php
 // includes/db.php - PostgreSQL via Supabase for Vercel Serverless Functions
-// Database connection for Vercel deployment
-// Secrets should be configured in Vercel dashboard as environment variables:
-// - SUPABASE_PROJECT_REF
-// - SUPABASE_SERVICE_ROLE_KEY
-// - SUPABASE_DB_PASSWORD (optional)
+// Configure these in the Vercel project environment:
+// - SUPABASE_URL
+// - SUPABASE_DB_PASSWORD (the database password, not an API key)
 
-$projectRef = getenv('SUPABASE_PROJECT_REF') ?: 'lvpxlkyyawcirxlngvax';
-$serviceRoleKey = getenv('SUPABASE_SERVICE_ROLE_KEY') ?: 'your-supabase-password-here';
+$supabaseUrl = getenv('SUPABASE_URL') ?: 'https://lvpxlkyyawcirxlngvax.supabase.co';
+$supabaseDbPassword = getenv('SUPABASE_DB_PASSWORD');
+$supabaseHost = parse_url($supabaseUrl, PHP_URL_HOST);
 
-$host = "$projectRef.supabase.co";
+if (!$supabaseHost || !$supabaseDbPassword) {
+    error_log('Supabase database connection is not configured.');
+    http_response_code(500);
+    die('Database connection is not configured.');
+}
+
+$host = $supabaseHost;
 $username = "postgres";
-$password = $serviceRoleKey;
+$password = $supabaseDbPassword;
 $dbname = "postgres";
 
 try {
@@ -25,6 +31,5 @@ try {
     );
 } catch (PDOException $e) {
     error_log("Database connection failed: " . $e->getMessage());
-    // In production, you might want to return a meaningful error
-    // instead of dying
     die("Database connection failed");
+}
