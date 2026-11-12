@@ -38,7 +38,7 @@ $messages = $conn->query("SELECT * FROM contact_messages ORDER BY submitted_at D
 <div class="container py-4">
     <h2 class="fw-bold mb-4">Contact Messages</h2>
 
-    <?php if ($messages->num_rows > 0): ?>
+    <?php if ($messages->rowCount() > 0): ?>
         <div class="glass-card p-4">
             <div class="table-responsive">
                 <table class="table">
@@ -53,7 +53,7 @@ $messages = $conn->query("SELECT * FROM contact_messages ORDER BY submitted_at D
                         </tr>
                     </thead>
                     <tbody>
-                        <?php while ($msg = $messages->fetch_assoc()): ?>
+                        <?php while ($msg = $messages->fetch()): ?>
                         <tr>
                             <td><?php echo htmlspecialchars($msg['name']); ?></td>
                             <td><a href="mailto:<?php echo htmlspecialchars($msg['email']); ?>"><?php echo htmlspecialchars($msg['email']); ?></a></td>

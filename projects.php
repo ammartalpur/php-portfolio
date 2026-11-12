@@ -77,6 +77,6 @@ $result = $conn->query($sql);
 </style>
 
 <?php 
-$conn->close();
+$conn = null;
 include 'includes/footer.php'; 
 ?>

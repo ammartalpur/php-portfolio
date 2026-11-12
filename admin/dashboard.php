@@ -87,7 +87,7 @@ $messages = $conn->query("SELECT * FROM contact_messages ORDER BY submitted_at D
         <div class="col-12">
             <div class="glass-card p-4">
                 <h4 class="fw-bold mb-3"><i class="bi bi-clock-history me-2"></i>Recent Messages</h4>
-                <?php if ($messages->num_rows > 0): ?>
+                <?php if ($messages->rowCount() > 0): ?>
                     <div class="table-responsive">
                         <table class="table table-hover">
                             <thead>

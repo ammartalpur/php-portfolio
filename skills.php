@@ -107,6 +107,6 @@ if ($result->rowCount() > 0) {
 </section>
 
 <?php 
-$conn->close();
+$conn = null;
 include 'includes/footer.php'; 
 ?>

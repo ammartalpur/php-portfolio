@@ -140,6 +140,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 </section>
 
 <?php
-$conn->close();
+$conn = null;
 include 'includes/footer.php';
 ?>
