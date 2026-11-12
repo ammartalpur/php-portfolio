@@ -4,12 +4,10 @@
 // - SUPABASE_URL
 // - SUPABASE_DB_PASSWORD (the database password, not an API key)
 
-$supabaseUrl = getenv('SUPABASE_URL') ?: 'https://lvpxlkyyawcirxlngvax.supabase.co';
 $supabaseDbPassword = getenv('SUPABASE_DB_PASSWORD');
-$supabaseApiHost = parse_url($supabaseUrl, PHP_URL_HOST);
-$supabaseHost = getenv('SUPABASE_DB_HOST') ?: ($supabaseApiHost ? 'db.' . $supabaseApiHost : null);
+$supabaseHost = getenv('SUPABASE_DB_HOST') ?: 'aws-0-ap-northeast-1.pooler.supabase.com';
 $supabasePort = getenv('SUPABASE_DB_PORT') ?: '5432';
-$supabaseUser = getenv('SUPABASE_DB_USER') ?: 'postgres';
+$supabaseUser = getenv('SUPABASE_DB_USER') ?: 'postgres.lvpxlkyyawcirxlngvax';
 $hasPgsqlDriver = extension_loaded('pdo_pgsql');
 
 error_log(sprintf(
