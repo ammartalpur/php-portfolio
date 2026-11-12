@@ -17,14 +17,23 @@ error_log(sprintf(
     $hasPgsqlDriver ? 'yes' : 'no'
 ));
 
+function reportDatabaseError(string $message): void
+{
+    error_log($message);
+
+    if (getenv('APP_DEBUG') === 'true') {
+        echo '<script>console.error(' . json_encode($message) . ');</script>';
+    }
+}
+
 if (!$supabaseHost || !$supabaseDbPassword) {
-    error_log('Supabase database connection is not configured.');
+    reportDatabaseError('Supabase database connection is not configured.');
     http_response_code(500);
     die('Database connection is not configured.');
 }
 
 if (!$hasPgsqlDriver) {
-    error_log('The pdo_pgsql PHP extension is unavailable in the deployment runtime.');
+    reportDatabaseError('The pdo_pgsql PHP extension is unavailable in the deployment runtime.');
     http_response_code(500);
     die('PostgreSQL support is unavailable.');
 }
@@ -45,7 +54,7 @@ try {
         ]
     );
 } catch (PDOException $e) {
-    error_log(sprintf(
+    reportDatabaseError(sprintf(
         'Supabase PDO connection failed: code=%s, message=%s',
         $e->getCode(),
         $e->getMessage()
