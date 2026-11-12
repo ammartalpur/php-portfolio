@@ -7,12 +7,16 @@
 $supabaseUrl = getenv('SUPABASE_URL') ?: 'https://lvpxlkyyawcirxlngvax.supabase.co';
 $supabaseDbPassword = getenv('SUPABASE_DB_PASSWORD');
 $supabaseApiHost = parse_url($supabaseUrl, PHP_URL_HOST);
-$supabaseHost = $supabaseApiHost ? 'db.' . $supabaseApiHost : null;
+$supabaseHost = getenv('SUPABASE_DB_HOST') ?: ($supabaseApiHost ? 'db.' . $supabaseApiHost : null);
+$supabasePort = getenv('SUPABASE_DB_PORT') ?: '5432';
+$supabaseUser = getenv('SUPABASE_DB_USER') ?: 'postgres';
 $hasPgsqlDriver = extension_loaded('pdo_pgsql');
 
 error_log(sprintf(
-    'Supabase config: host=%s, database=postgres, username=postgres, password_set=%s, pdo_pgsql=%s',
+    'Supabase config: host=%s, port=%s, database=postgres, username=%s, password_set=%s, pdo_pgsql=%s',
     $supabaseHost ?: 'invalid',
+    $supabasePort,
+    $supabaseUser,
     $supabaseDbPassword ? 'yes' : 'no',
     $hasPgsqlDriver ? 'yes' : 'no'
 ));
@@ -39,13 +43,14 @@ if (!$hasPgsqlDriver) {
 }
 
 $host = $supabaseHost;
-$username = "postgres";
+$port = $supabasePort;
+$username = $supabaseUser;
 $password = $supabaseDbPassword;
 $dbname = "postgres";
 
 try {
     $conn = new PDO(
-        "pgsql:host=$host;dbname=$dbname;port=5432",
+        "pgsql:host=$host;dbname=$dbname;port=$port",
         $username,
         $password,
         [
